@@ -10,7 +10,7 @@ Chrome Sweep là tiện ích Windows để dọn cache Google Chrome và Microso
 
 ## Tải và chạy
 
-Tải [Chrome Sweep.exe](https://github.com/congthuc007/ChromeSweep/raw/refs/heads/main/Chrome%20Sweep.exe) rồi bấm đúp để mở. EXE chứa sẵn giao diện, script dọn và icon. Máy cần Windows PowerShell 5.1 và .NET Framework 4.x.
+Tải [ChromeSweep.exe](https://github.com/congthuc007/ChromeSweep/releases/latest/download/ChromeSweep.exe) từ [bản phát hành mới nhất](https://github.com/congthuc007/ChromeSweep/releases/latest), rồi bấm đúp để mở. EXE chứa sẵn giao diện, script dọn và icon. Máy cần Windows PowerShell 5.1 và .NET Framework 4.x.
 
 ## Chức năng
 
