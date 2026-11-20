@@ -2,6 +2,29 @@
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
+# Assign the hosted window its own taskbar identity before creating any UI.
+if (-not ('ChromeSweep.TaskbarIdentity' -as [type])) {
+    Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+namespace ChromeSweep
+{
+    public static class TaskbarIdentity
+    {
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+        private static extern int SetCurrentProcessExplicitAppUserModelID(string appId);
+
+        public static void Initialize()
+        {
+            Marshal.ThrowExceptionForHR(
+                SetCurrentProcessExplicitAppUserModelID("congthuc007.ChromeSweep"));
+        }
+    }
+}
+"@
+}
+[ChromeSweep.TaskbarIdentity]::Initialize()
 [Windows.Forms.Application]::EnableVisualStyles()
 $backend = Join-Path $PSScriptRoot 'ChromeCacheCleaner.ps1'
 if (!(Test-Path -LiteralPath $backend -PathType Leaf)) {
