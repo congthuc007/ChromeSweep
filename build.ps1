@@ -9,11 +9,11 @@ if (!(Test-Path -LiteralPath $compiler -PathType Leaf)) {
 }
 $source = Join-Path $PSScriptRoot 'src'
 $launcher = Join-Path $source 'Launcher.cs'
-$backend = Join-Path $source 'ChromeCacheCleaner.ps1'
-$gui = Join-Path $source 'ChromeCacheCleaner.GUI.ps1'
+$backend = Join-Path $source 'CacheCleaner.ps1'
+$gui = Join-Path $source 'CacheCleaner.GUI.ps1'
 $nvidia = Join-Path $source 'NvidiaCache.ps1'
-$exe = Join-Path $PSScriptRoot 'Chrome Sweep.exe'
-$icon = Join-Path $PSScriptRoot 'assets\ChromeSweep.ico'
-& $compiler /nologo /target:winexe /platform:anycpu /optimize+ /codepage:65001 /reference:System.Windows.Forms.dll "/out:$exe" "/win32icon:$icon" "/resource:$icon,ChromeSweep.ico" "/resource:$backend,ChromeCacheCleaner.ps1" "/resource:$gui,ChromeCacheCleaner.GUI.ps1" "/resource:$nvidia,NvidiaCache.ps1" $launcher
+$exe = Join-Path $PSScriptRoot 'Kaius Sweep.exe'
+$icon = Join-Path $PSScriptRoot 'assets\KaiusSweep.ico'
+& $compiler /nologo /target:winexe /platform:anycpu /optimize+ /codepage:65001 /reference:System.Windows.Forms.dll "/out:$exe" "/win32icon:$icon" "/resource:$icon,KaiusSweep.ico" "/resource:$backend,CacheCleaner.ps1" "/resource:$gui,CacheCleaner.GUI.ps1" "/resource:$nvidia,NvidiaCache.ps1" $launcher
 if ($LASTEXITCODE -ne 0) { throw "Build lỗi, csc.exe trả về mã $LASTEXITCODE." }
 Write-Host "Đã build $exe"

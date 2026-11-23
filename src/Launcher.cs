@@ -4,13 +4,13 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-[assembly: AssemblyTitle("Chrome Sweep")]
-[assembly: AssemblyProduct("Chrome Sweep")]
+[assembly: AssemblyTitle("Kaius Sweep")]
+[assembly: AssemblyProduct("Kaius Sweep")]
 [assembly: AssemblyCompany("Nguyễn Công Thức")]
 [assembly: AssemblyCopyright("Copyright © 2026 Nguyễn Công Thức")]
-[assembly: AssemblyVersion("1.1.1.0")]
-[assembly: AssemblyFileVersion("1.1.1.0")]
-[assembly: AssemblyInformationalVersion("1.1.1")]
+[assembly: AssemblyVersion("1.2.0.0")]
+[assembly: AssemblyFileVersion("1.2.0.0")]
+[assembly: AssemblyInformationalVersion("1.2.0")]
 
 internal static class Launcher
 {
@@ -20,12 +20,12 @@ internal static class Launcher
         string runtime = null;
         try
         {
-            runtime = Path.Combine(Path.GetTempPath(), "ChromeSweep-" + Guid.NewGuid().ToString("N"));
+            runtime = Path.Combine(Path.GetTempPath(), "KaiusSweep-" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(runtime);
-            Extract(runtime, "ChromeCacheCleaner.ps1");
+            Extract(runtime, "CacheCleaner.ps1");
             Extract(runtime, "NvidiaCache.ps1");
-            Extract(runtime, "ChromeSweep.ico");
-            string gui = Extract(runtime, "ChromeCacheCleaner.GUI.ps1");
+            Extract(runtime, "KaiusSweep.ico");
+            string gui = Extract(runtime, "CacheCleaner.GUI.ps1");
 
             string windows = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
             string powershell = Path.Combine(windows, @"System32\WindowsPowerShell\v1.0\powershell.exe");
@@ -55,7 +55,7 @@ internal static class Launcher
         }
         catch (Exception error)
         {
-            MessageBox.Show(error.Message, "Chrome Sweep", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(error.Message, "Kaius Sweep", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return 1;
         }
         finally
@@ -64,10 +64,10 @@ internal static class Launcher
             {
                 try
                 {
-                    File.Delete(Path.Combine(runtime, "ChromeCacheCleaner.GUI.ps1"));
-                    File.Delete(Path.Combine(runtime, "ChromeCacheCleaner.ps1"));
+                    File.Delete(Path.Combine(runtime, "CacheCleaner.GUI.ps1"));
+                    File.Delete(Path.Combine(runtime, "CacheCleaner.ps1"));
                     File.Delete(Path.Combine(runtime, "NvidiaCache.ps1"));
-                    File.Delete(Path.Combine(runtime, "ChromeSweep.ico"));
+                    File.Delete(Path.Combine(runtime, "KaiusSweep.ico"));
                     Directory.Delete(runtime);
                 }
                 catch (IOException) { }

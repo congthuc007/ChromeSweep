@@ -1,6 +1,6 @@
 ﻿# Windows PowerShell 5.1+
-# Preview: .\ChromeCacheCleaner.ps1
-# Clean:   .\ChromeCacheCleaner.ps1 -Clean
+# Preview: .\CacheCleaner.ps1
+# Clean:   .\CacheCleaner.ps1 -Clean
 [CmdletBinding(SupportsShouldProcess)]
 param(
     [switch]$Clean,

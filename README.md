@@ -1,10 +1,10 @@
-<img src="assets/ChromeSweep.png" width="96" alt="Logo Chrome Sweep">
+<img src="assets/KaiusSweep.png" width="96" alt="Logo Kaius Sweep">
 
-# Chrome Sweep
+# Kaius Sweep
 
-**Phiên bản hiện tại** · 1.1.1
+**Phiên bản hiện tại** · 1.2.0
 
-Chrome Sweep là tiện ích Windows để dọn cache Google Chrome và Microsoft Edge theo từng hồ sơ, đồng thời dọn file tạm cũ của Windows.
+Kaius Sweep là tiện ích Windows để dọn cache Google Chrome và Microsoft Edge theo từng hồ sơ, dọn file tạm cũ của Windows và dọn gói cài driver NVIDIA còn sót.
 
 **Tác giả** · Nguyễn Công Thức ([@congthuc007](https://github.com/congthuc007))
 
@@ -12,7 +12,7 @@ Chrome Sweep là tiện ích Windows để dọn cache Google Chrome và Microso
 
 ## Tải và chạy
 
-Tải [ChromeSweep.exe](https://github.com/congthuc007/ChromeSweep/releases/latest/download/ChromeSweep.exe) từ [bản phát hành mới nhất](https://github.com/congthuc007/ChromeSweep/releases/latest), rồi bấm đúp để mở. EXE chứa sẵn giao diện, script dọn và icon. Máy cần Windows PowerShell 5.1 và .NET Framework 4.x.
+Tải [KaiusSweep.exe](https://github.com/congthuc007/KaiusSweep/releases/latest/download/KaiusSweep.exe) từ [bản phát hành mới nhất](https://github.com/congthuc007/KaiusSweep/releases/latest), rồi bấm đúp để mở. EXE chứa sẵn giao diện, script dọn và icon. Máy cần Windows PowerShell 5.1 và .NET Framework 4.x.
 
 ## Chức năng
 
@@ -58,9 +58,9 @@ Phạm vi tính năng chỉ gồm gói tải driver. Driver đã cài trong Wind
 | --- | --- |
 | src/NvidiaCache.ps1 | Kiểm tra và dọn gói tải driver NVIDIA. |
 | [`src/Launcher.cs`](src/Launcher.cs) | Mở ứng dụng và nạp tài nguyên nhúng trong EXE. |
-| [`src/ChromeCacheCleaner.GUI.ps1`](src/ChromeCacheCleaner.GUI.ps1) | Giao diện Windows Forms. |
-| [`src/ChromeCacheCleaner.ps1`](src/ChromeCacheCleaner.ps1) | Quét hồ sơ, dọn dữ liệu và quản lý tiến trình trình duyệt. |
-| [`src/ChromeCacheCleaner.cmd`](src/ChromeCacheCleaner.cmd) | Mở giao diện trực tiếp từ mã nguồn. |
+| [`src/CacheCleaner.GUI.ps1`](src/CacheCleaner.GUI.ps1) | Giao diện Windows Forms. |
+| [`src/CacheCleaner.ps1`](src/CacheCleaner.ps1) | Quét hồ sơ, dọn dữ liệu và quản lý tiến trình trình duyệt. |
+| [`src/CacheCleaner.cmd`](src/CacheCleaner.cmd) | Mở giao diện trực tiếp từ mã nguồn. |
 | [`assets/`](assets/) | Logo PNG gốc và icon ICO với 10 kích thước từ 16 đến 256 px. |
 | [`build.ps1`](build.ps1) | Đóng gói script và icon thành EXE. |
 
@@ -72,7 +72,7 @@ Mở PowerShell trong thư mục dự án và chạy lệnh sau:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
-Script dùng trình biên dịch C# của .NET Framework 4.x và tạo `Chrome Sweep.exe` trong thư mục dự án.
+Script dùng trình biên dịch C# của .NET Framework 4.x và tạo `Kaius Sweep.exe` trong thư mục dự án.
 
 ## Giấy phép
 
