@@ -3,12 +3,12 @@ $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 # Assign the hosted window its own taskbar identity before creating any UI.
-if (-not ('KaiusSweep.TaskbarIdentity' -as [type])) {
+if (-not ('KSweep.TaskbarIdentity' -as [type])) {
     Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
 
-namespace KaiusSweep
+namespace KSweep
 {
     public static class TaskbarIdentity
     {
@@ -18,22 +18,22 @@ namespace KaiusSweep
         public static void Initialize()
         {
             Marshal.ThrowExceptionForHR(
-                SetCurrentProcessExplicitAppUserModelID("congthuc007.KaiusSweep"));
+                SetCurrentProcessExplicitAppUserModelID("congthuc007.KSweep"));
         }
     }
 }
 "@
 }
-[KaiusSweep.TaskbarIdentity]::Initialize()
+[KSweep.TaskbarIdentity]::Initialize()
 [Windows.Forms.Application]::EnableVisualStyles()
 $backend = Join-Path $PSScriptRoot 'CacheCleaner.ps1'
 if (!(Test-Path -LiteralPath $backend -PathType Leaf)) {
-    [void][Windows.Forms.MessageBox]::Show('Thiếu CacheCleaner.ps1 trong cùng thư mục.', 'Kaius Sweep')
+    [void][Windows.Forms.MessageBox]::Show('Thiếu CacheCleaner.ps1 trong cùng thư mục.', 'KSweep')
     exit 1
 }
 
 $form = New-Object Windows.Forms.Form -Property @{
-    Text = 'Kaius Sweep v1.2.0'
+    Text = 'KSweep v1.2.0'
     StartPosition = 'CenterScreen'
     MinimumSize = [Drawing.Size]::new(850, 500)
     ClientSize = [Drawing.Size]::new(980, 550)
@@ -41,9 +41,9 @@ $form = New-Object Windows.Forms.Form -Property @{
     AutoScaleMode = 'Dpi'
     KeyPreview = $true
 }
-$iconPath = Join-Path $PSScriptRoot 'KaiusSweep.ico'
+$iconPath = Join-Path $PSScriptRoot 'KSweep.ico'
 if (!(Test-Path -LiteralPath $iconPath -PathType Leaf)) {
-    $iconPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'assets\KaiusSweep.ico'
+    $iconPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'assets\KSweep.ico'
 }
 if (Test-Path -LiteralPath $iconPath -PathType Leaf) {
     $form.Icon = [Drawing.Icon]::new($iconPath)
@@ -182,7 +182,7 @@ $timer.Add_Tick({
 
     if ($errorText -or $warnings) {
         $detail = (@($errorText, $warnings) | Where-Object { $_ }) -join [Environment]::NewLine
-        [void][Windows.Forms.MessageBox]::Show($form, $detail, 'Kaius Sweep', 'OK', 'Warning')
+        [void][Windows.Forms.MessageBox]::Show($form, $detail, 'KSweep', 'OK', 'Warning')
     }
     if ($mode -eq 'Clean' -and !$errorText) {
         $job.Note = 'Đã dọn khoảng {0}.' -f (Format-CacheSize $result[0].RemovedBytes)

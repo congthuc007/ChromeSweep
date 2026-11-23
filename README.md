@@ -1,10 +1,10 @@
-<img src="assets/KaiusSweep.png" width="96" alt="Logo Kaius Sweep">
+<img src="assets/KSweep.png" width="96" alt="Logo KSweep">
 
-# Kaius Sweep
+# KSweep
 
 **Phiên bản hiện tại** · 1.2.0
 
-Kaius Sweep là tiện ích Windows để dọn cache Google Chrome và Microsoft Edge theo từng hồ sơ, dọn file tạm cũ của Windows và dọn gói cài driver NVIDIA còn sót.
+KSweep là tiện ích Windows để dọn cache Google Chrome và Microsoft Edge theo từng hồ sơ, dọn file tạm cũ của Windows và dọn gói cài driver NVIDIA còn sót.
 
 **Tác giả** · Nguyễn Công Thức ([@congthuc007](https://github.com/congthuc007))
 
@@ -12,7 +12,7 @@ Kaius Sweep là tiện ích Windows để dọn cache Google Chrome và Microsof
 
 ## Tải và chạy
 
-Tải [KaiusSweep.exe](https://github.com/congthuc007/KaiusSweep/releases/latest/download/KaiusSweep.exe) từ [bản phát hành mới nhất](https://github.com/congthuc007/KaiusSweep/releases/latest), rồi bấm đúp để mở. EXE chứa sẵn giao diện, script dọn và icon. Máy cần Windows PowerShell 5.1 và .NET Framework 4.x.
+Tải [KSweep.exe](https://github.com/congthuc007/KSweep/releases/latest/download/KSweep.exe) từ [bản phát hành mới nhất](https://github.com/congthuc007/KSweep/releases/latest), rồi bấm đúp để mở. EXE chứa sẵn giao diện, script dọn và icon. Máy cần Windows PowerShell 5.1 và .NET Framework 4.x.
 
 ## Chức năng
 
@@ -72,7 +72,7 @@ Mở PowerShell trong thư mục dự án và chạy lệnh sau:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
-Script dùng trình biên dịch C# của .NET Framework 4.x và tạo `Kaius Sweep.exe` trong thư mục dự án.
+Script dùng trình biên dịch C# của .NET Framework 4.x và tạo `KSweep.exe` trong thư mục dự án.
 
 ## Giấy phép
 

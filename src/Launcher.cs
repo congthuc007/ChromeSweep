@@ -4,8 +4,8 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
-[assembly: AssemblyTitle("Kaius Sweep")]
-[assembly: AssemblyProduct("Kaius Sweep")]
+[assembly: AssemblyTitle("KSweep")]
+[assembly: AssemblyProduct("KSweep")]
 [assembly: AssemblyCompany("Nguyễn Công Thức")]
 [assembly: AssemblyCopyright("Copyright © 2026 Nguyễn Công Thức")]
 [assembly: AssemblyVersion("1.2.0.0")]
@@ -20,11 +20,11 @@ internal static class Launcher
         string runtime = null;
         try
         {
-            runtime = Path.Combine(Path.GetTempPath(), "KaiusSweep-" + Guid.NewGuid().ToString("N"));
+            runtime = Path.Combine(Path.GetTempPath(), "KSweep-" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(runtime);
             Extract(runtime, "CacheCleaner.ps1");
             Extract(runtime, "NvidiaCache.ps1");
-            Extract(runtime, "KaiusSweep.ico");
+            Extract(runtime, "KSweep.ico");
             string gui = Extract(runtime, "CacheCleaner.GUI.ps1");
 
             string windows = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
@@ -55,7 +55,7 @@ internal static class Launcher
         }
         catch (Exception error)
         {
-            MessageBox.Show(error.Message, "Kaius Sweep", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(error.Message, "KSweep", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return 1;
         }
         finally
@@ -67,7 +67,7 @@ internal static class Launcher
                     File.Delete(Path.Combine(runtime, "CacheCleaner.GUI.ps1"));
                     File.Delete(Path.Combine(runtime, "CacheCleaner.ps1"));
                     File.Delete(Path.Combine(runtime, "NvidiaCache.ps1"));
-                    File.Delete(Path.Combine(runtime, "KaiusSweep.ico"));
+                    File.Delete(Path.Combine(runtime, "KSweep.ico"));
                     Directory.Delete(runtime);
                 }
                 catch (IOException) { }
