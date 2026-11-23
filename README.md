@@ -2,6 +2,8 @@
 
 # Chrome Sweep
 
+**Phiên bản hiện tại** · 1.1.1
+
 Chrome Sweep là tiện ích Windows để dọn cache Google Chrome và Microsoft Edge theo từng hồ sơ, đồng thời dọn file tạm cũ của Windows.
 
 **Tác giả** · Nguyễn Công Thức ([@congthuc007](https://github.com/congthuc007))

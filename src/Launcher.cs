@@ -4,6 +4,14 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
+[assembly: AssemblyTitle("Chrome Sweep")]
+[assembly: AssemblyProduct("Chrome Sweep")]
+[assembly: AssemblyCompany("Nguyễn Công Thức")]
+[assembly: AssemblyCopyright("Copyright © 2026 Nguyễn Công Thức")]
+[assembly: AssemblyVersion("1.1.1.0")]
+[assembly: AssemblyFileVersion("1.1.1.0")]
+[assembly: AssemblyInformationalVersion("1.1.1")]
+
 internal static class Launcher
 {
     [STAThread]
