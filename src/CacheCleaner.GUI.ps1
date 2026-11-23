@@ -33,7 +33,7 @@ if (!(Test-Path -LiteralPath $backend -PathType Leaf)) {
 }
 
 $form = New-Object Windows.Forms.Form -Property @{
-    Text = 'KSweep v1.2.0'
+    Text = 'KSweep v1.2.1'
     StartPosition = 'CenterScreen'
     MinimumSize = [Drawing.Size]::new(850, 500)
     ClientSize = [Drawing.Size]::new(980, 550)

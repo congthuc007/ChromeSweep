@@ -2,7 +2,7 @@
 
 # KSweep
 
-**Phiên bản hiện tại** · 1.2.0
+**Phiên bản hiện tại** · 1.2.1
 
 KSweep là tiện ích Windows để dọn cache Google Chrome và Microsoft Edge theo từng hồ sơ, dọn file tạm cũ của Windows và dọn gói cài driver NVIDIA còn sót.
 
@@ -60,7 +60,7 @@ Phạm vi tính năng chỉ gồm gói tải driver. Driver đã cài trong Wind
 | [`src/Launcher.cs`](src/Launcher.cs) | Mở ứng dụng và nạp tài nguyên nhúng trong EXE. |
 | [`src/CacheCleaner.GUI.ps1`](src/CacheCleaner.GUI.ps1) | Giao diện Windows Forms. |
 | [`src/CacheCleaner.ps1`](src/CacheCleaner.ps1) | Quét hồ sơ, dọn dữ liệu và quản lý tiến trình trình duyệt. |
-| [`src/CacheCleaner.cmd`](src/CacheCleaner.cmd) | Mở giao diện trực tiếp từ mã nguồn. |
+| [`src/KSweep.cmd`](src/KSweep.cmd) | Mở giao diện trực tiếp từ mã nguồn. |
 | [`assets/`](assets/) | Logo PNG gốc và icon ICO với 10 kích thước từ 16 đến 256 px. |
 | [`build.ps1`](build.ps1) | Đóng gói script và icon thành EXE. |
 
