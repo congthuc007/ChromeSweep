@@ -5,6 +5,8 @@
 param(
     [switch]$Clean,
     [switch]$Temp,
+    [switch]$Nvidia,
+    [string[]]$NvidiaPackage,
     [Alias('CloseChrome')]
     [switch]$CloseBrowser,
     [ValidateSet('Chrome', 'Edge')]
@@ -44,6 +46,12 @@ function Measure-Cache {
         }
     }
     return $bytes
+}
+
+if ($Nvidia) {
+    . (Join-Path $PSScriptRoot 'NvidiaCache.ps1')
+    if ($Clean) { Remove-NvidiaPackages $NvidiaPackage } else { Get-NvidiaPackages }
+    return
 }
 
 $browserInfo = if ($Browser -eq 'Edge') {

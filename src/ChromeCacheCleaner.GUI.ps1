@@ -35,8 +35,8 @@ if (!(Test-Path -LiteralPath $backend -PathType Leaf)) {
 $form = New-Object Windows.Forms.Form -Property @{
     Text = 'Chrome Sweep'
     StartPosition = 'CenterScreen'
-    MinimumSize = [Drawing.Size]::new(670, 470)
-    ClientSize = [Drawing.Size]::new(820, 510)
+    MinimumSize = [Drawing.Size]::new(850, 500)
+    ClientSize = [Drawing.Size]::new(980, 550)
     Font = [Drawing.Font]::new('Segoe UI', 10)
     AutoScaleMode = 'Dpi'
     KeyPreview = $true
@@ -77,6 +77,7 @@ $list = New-Object Windows.Forms.ListView -Property @{
 [void]$list.Columns.Add('Tên profile', 275)
 [void]$list.Columns.Add('Thư mục profile', 150)
 [void]$list.Columns.Add('Cache có thể dọn', 155)
+[void]$list.Columns.Add('Trạng thái', 350)
 $layout.Controls.Add($list, 0, 2)
 
 $status = New-Object Windows.Forms.Label -Property @{ Dock = 'Fill'; TextAlign = 'MiddleLeft'; AutoEllipsis = $true }
@@ -93,10 +94,10 @@ $quickSelect = New-Object Windows.Forms.FlowLayoutPanel -Property @{ Dock = 'Fil
 $layout.Controls.Add($quickSelect, 0, 1)
 $browserPicker = New-Object Windows.Forms.ComboBox -Property @{
     DropDownStyle = 'DropDownList'
-    Width = 112
+    Width = 125
     AccessibleName = 'Trình duyệt'
 }
-[void]$browserPicker.Items.AddRange(@('Chrome', 'Edge'))
+[void]$browserPicker.Items.AddRange(@('Chrome', 'Edge', 'NVIDIA'))
 $browserPicker.SelectedIndex = 0
 $quickSelect.Controls.AddRange(@($browserPicker, $selectAll, $clearSelection, $reload))
 $actions.Controls.AddRange(@($closeBrowserButton, $cleanButton, $tempButton))
@@ -113,17 +114,28 @@ function Format-CacheSize([long]$Bytes) {
 }
 function Update-Selection {
     if ($job.Worker) { return }
-    $selected = @($list.CheckedItems | Where-Object { $_.Tag.Bytes -gt 0 })
+    $selected = @($list.CheckedItems | Where-Object { $_.Tag.Bytes -gt 0 -and (!$_.Tag.PSObject.Properties['CanClean'] -or $_.Tag.CanClean) })
     $total = ($selected | ForEach-Object { $_.Tag.Bytes } | Measure-Object -Sum).Sum
     $cleanButton.Enabled = $selected.Count -gt 0
-    $status.Text = ('{0} Đã chọn {1} profile ({2}).' -f $job.Note, $selected.Count, (Format-CacheSize $total)).Trim()
+    $status.Text = ('{0} Đã chọn {1} mục ({2}).' -f $job.Note, $selected.Count, (Format-CacheSize $total)).Trim()
 }
 function Start-CacheJob([string]$Mode, [string[]]$SelectedProfiles) {
     $worker = [PowerShell]::Create()
     try {
-        [void]$worker.AddCommand($backend).AddParameter('MachineOutput', $true).AddParameter('Browser', [string]$browserPicker.SelectedItem)
+        [void]$worker.AddCommand($backend).AddParameter('MachineOutput', $true)
+        if ($browserPicker.SelectedItem -eq 'NVIDIA' -and $Mode -in @('Scan','Clean')) {
+            [void]$worker.AddParameter('Nvidia', $true)
+        } else {
+            $browser = if ($browserPicker.SelectedItem -eq 'Edge') { 'Edge' } else { 'Chrome' }
+            [void]$worker.AddParameter('Browser', $browser)
+        }
         if ($Mode -eq 'Clean') {
-            [void]$worker.AddParameter('Clean', $true).AddParameter('ProfileName', $SelectedProfiles)
+            [void]$worker.AddParameter('Clean', $true)
+            if ($browserPicker.SelectedItem -eq 'NVIDIA') {
+                [void]$worker.AddParameter('NvidiaPackage', $SelectedProfiles)
+            } else {
+                [void]$worker.AddParameter('ProfileName', $SelectedProfiles)
+            }
         } elseif ($Mode -eq 'Temp') {
             [void]$worker.AddParameter('Temp', $true).AddParameter('Clean', $true)
         } elseif ($Mode -eq 'CloseBrowser') {
@@ -139,7 +151,7 @@ function Start-CacheJob([string]$Mode, [string[]]$SelectedProfiles) {
             'Clean' { 'Đang dọn cache…' }
             'Temp' { 'Đang dọn file tạm Windows…' }
             'CloseBrowser' { "Đang thoát $($browserPicker.SelectedItem)…" }
-            default { "Đang quét profile $($browserPicker.SelectedItem)…" }
+            default { "Đang quét $($browserPicker.SelectedItem)…" }
         }
         $timer.Start()
     } catch {
@@ -174,6 +186,7 @@ $timer.Add_Tick({
     }
     if ($mode -eq 'Clean' -and !$errorText) {
         $job.Note = 'Đã dọn khoảng {0}.' -f (Format-CacheSize $result[0].RemovedBytes)
+        if ($result[0].Failed -gt 0) { $job.Note += ' Một số mục chưa dọn được; xem cảnh báo.' }
         Start-CacheJob Scan
         return
     }
@@ -185,6 +198,10 @@ $timer.Add_Tick({
                 $item = [Windows.Forms.ListViewItem]::new([string]$profileRow.DisplayName)
                 [void]$item.SubItems.Add([string]$profileRow.Profile)
                 [void]$item.SubItems.Add((Format-CacheSize $profileRow.Bytes))
+                [void]$item.SubItems.Add([string]$profileRow.Reason)
+                if ($profileRow.PSObject.Properties['CanClean'] -and !$profileRow.CanClean) {
+                    $item.ForeColor = [Drawing.Color]::DimGray
+                }
                 $item.Tag = $profileRow
                 [void]$list.Items.Add($item)
             }
@@ -209,27 +226,56 @@ $timer.Add_Tick({
     if ($errorText) {
         $job.Note = if ($mode -eq 'Clean') { 'Dọn cache chưa hoàn tất.' } elseif ($mode -eq 'Temp') { 'Dọn file tạm chưa hoàn tất.' } elseif ($mode -eq 'CloseBrowser') { "Chưa tắt hết $($browserPicker.SelectedItem)." } else { 'Quét chưa thành công.' }
     } elseif ($mode -eq 'Scan' -and $list.Items.Count -eq 0) {
-        $job.Note = "Không tìm thấy profile $($browserPicker.SelectedItem)."
+        $job.Note = "Không tìm thấy mục $($browserPicker.SelectedItem) để quét."
     }
     $browserPicker.Enabled = $true
     $list.Enabled = $true
     foreach ($button in $buttons) { $button.Enabled = $true }
+    $closeBrowserButton.Enabled = $browserPicker.SelectedItem -ne 'NVIDIA'
     Update-Selection
 })
+$list.Add_ItemCheck({
+    param($sender, $eventArgs)
+    $row = $list.Items[$eventArgs.Index].Tag
+    if ($row -and $row.PSObject.Properties['CanClean'] -and !$row.CanClean) {
+        $eventArgs.NewValue = [Windows.Forms.CheckState]::Unchecked
+    }
+})
 $list.Add_ItemChecked({ Update-Selection })
-$selectAll.Add_Click({ foreach ($item in $list.Items) { $item.Checked = $item.Tag.Bytes -gt 0 } })
+$selectAll.Add_Click({ foreach ($item in $list.Items) { $item.Checked = $item.Tag.Bytes -gt 0 -and (!$item.Tag.PSObject.Properties['CanClean'] -or $item.Tag.CanClean) } })
 $clearSelection.Add_Click({ foreach ($item in $list.Items) { $item.Checked = $false } })
 $reload.Add_Click({ $job.Note = ''; Start-CacheJob Scan })
 $browserPicker.Add_SelectedIndexChanged({
     if ($job.Worker) { return }
     $list.Items.Clear()
-    $closeBrowserButton.Text = "Tắt hết $($browserPicker.SelectedItem)"
+    $nvidiaMode = $browserPicker.SelectedItem -eq 'NVIDIA'
+    $closeBrowserButton.Text = if ($nvidiaMode) { 'Tắt trình duyệt' } else { "Tắt hết $($browserPicker.SelectedItem)" }
+    $closeBrowserButton.Enabled = !$nvidiaMode
+    $list.Columns[0].Text = if ($nvidiaMode) { 'Gói cài NVIDIA' } else { 'Tên profile' }
+    $list.Columns[1].Text = if ($nvidiaMode) { 'Mã gói' } else { 'Thư mục profile' }
+    $cleanButton.Text = if ($nvidiaMode) { 'Xóa gói đã chọn' } else { 'Xóa cache đã chọn' }
+    $header.Text = if ($nvidiaMode) {
+        'Chọn gói NVIDIA đủ điều kiện để dọn. Đóng NVIDIA App và trình cài đặt trước khi quét.' + [Environment]::NewLine +
+        'Bộ cài và thư mục giải nén được gom theo gói; gói chưa rõ trạng thái được khóa.' + [Environment]::NewLine +
+        'Sau khi dọn, cài lại driver có thể cần tải lại bộ cài.'
+    } else {
+        'Chọn profile cần dọn cache.' + [Environment]::NewLine +
+        'Cookie, đăng nhập và dữ liệu phiên được giữ nguyên.' + [Environment]::NewLine +
+        'Dọn file tạm: chỉ xóa file Windows Temp đã cũ hơn 7 ngày.'
+    }
     $job.Note = ''
     Start-CacheJob Scan
 })
 $cleanButton.Add_Click({
-    $selected = @($list.CheckedItems | Where-Object { $_.Tag.Bytes -gt 0 } | ForEach-Object { $_.Tag.Profile })
+    $selected = @($list.CheckedItems | Where-Object { $_.Tag.Bytes -gt 0 -and (!$_.Tag.PSObject.Properties['CanClean'] -or $_.Tag.CanClean) } | ForEach-Object { $_.Tag.Profile })
     if ($selected.Count -eq 0) { return }
+    if ($browserPicker.SelectedItem -eq 'NVIDIA') {
+        $answer = [Windows.Forms.MessageBox]::Show(
+            $form, 'Xóa bộ cài và dữ liệu giải nén của các gói NVIDIA đã chọn? Nếu cần cài lại driver, NVIDIA App có thể phải tải lại.',
+            'Dọn gói tải NVIDIA', 'YesNo', 'Question', 'Button2')
+        if ($answer -eq 'Yes') { $job.Note = ''; Start-CacheJob Clean $selected }
+        return
+    }
     $sessionId = [Diagnostics.Process]::GetCurrentProcess().SessionId
     $browser = [string]$browserPicker.SelectedItem
     $processName = if ($browser -eq 'Edge') { 'msedge' } else { 'chrome' }

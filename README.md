@@ -16,6 +16,7 @@ Tải [ChromeSweep.exe](https://github.com/congthuc007/ChromeSweep/releases/late
 
 | Chức năng | Cách hoạt động |
 | --- | --- |
+| **Dọn gói tải NVIDIA** | Quét gói cài Game Ready/Studio và dữ liệu giải nén, hiển thị phiên bản, dung lượng và điều kiện dọn theo gói. |
 | **Quét hồ sơ Chrome và Edge** | Chọn trình duyệt để xem tên, thư mục và dung lượng cache của từng hồ sơ. Khi đổi trình duyệt, ứng dụng quét lại và bỏ lựa chọn cũ. |
 | **Chọn nhanh** | Tích từng hồ sơ, dùng **Ctrl+A** để chọn mọi hồ sơ có cache hoặc **Ctrl+Shift+A** để bỏ chọn. Giao diện hiển thị tổng dung lượng cache đang được chọn. |
 | **Quét lại** | Cập nhật danh sách hồ sơ và dung lượng cache của trình duyệt đang chọn. |
@@ -37,10 +38,23 @@ Tải [ChromeSweep.exe](https://github.com/congthuc007/ChromeSweep/releases/late
 
 Bấm **Dọn file tạm** để quét `%LOCALAPPDATA%\Temp` và `%WINDIR%\Temp`. Chỉ file có cả ngày tạo lẫn ngày sửa cũ hơn 7 ngày mới đủ điều kiện. File đang khóa, mục thiếu quyền và đường dẫn liên kết được bỏ qua.
 
+### Gói cài NVIDIA còn sót
+
+1. Đóng NVIDIA App và chờ trình cài đặt kết thúc.
+2. Chọn **NVIDIA** ở đầu cửa sổ rồi bấm **Quét lại**.
+3. Chọn gói có trạng thái **Có thể dọn**, bấm **Xóa gói đã chọn** và xác nhận.
+
+Ứng dụng chỉ xử lý thư mục gói có mã hợp lệ trong hai nhánh grd và crd của %PROGRAMDATA%\NVIDIA Corporation\NVIDIA App\UpdateFramework\ota-artifacts. Mỗi dòng gồm bộ cài và thư mục giải nén cùng mã gói.
+
+Điều kiện dọn gồm phiên bản gói được nhận diện thống nhất, phiên bản bằng hoặc cũ hơn driver NVIDIA đã cài và bản ghi tải hoàn tất theo định dạng NVIDIA App mà công cụ nhận diện. Gói mới hơn driver, gói chưa rõ phiên bản/trạng thái và gói có đường dẫn liên kết sẽ bị khóa. Công cụ kiểm tra lại điều kiện trước khi dọn. Nếu NVIDIA App hoặc trình cài đặt còn chạy, quét lại sau khi đóng chúng.
+
+Phạm vi tính năng chỉ gồm gói tải driver. Driver đã cài trong Windows và cấu hình NVIDIA nằm ngoài vùng dọn. Sau khi xóa gói, NVIDIA App có thể phải tải lại để cài lại driver. Mục thiếu quyền được báo trong cảnh báo. Tính năng chưa xử lý gói cập nhật NVIDIA App (nvapp) hoặc đường dẫn cache tùy chỉnh.
+
 ## Mã nguồn
 
 | Đường dẫn | Vai trò |
 | --- | --- |
+| src/NvidiaCache.ps1 | Kiểm tra và dọn gói tải driver NVIDIA. |
 | [`src/Launcher.cs`](src/Launcher.cs) | Mở ứng dụng và nạp tài nguyên nhúng trong EXE. |
 | [`src/ChromeCacheCleaner.GUI.ps1`](src/ChromeCacheCleaner.GUI.ps1) | Giao diện Windows Forms. |
 | [`src/ChromeCacheCleaner.ps1`](src/ChromeCacheCleaner.ps1) | Quét hồ sơ, dọn dữ liệu và quản lý tiến trình trình duyệt. |

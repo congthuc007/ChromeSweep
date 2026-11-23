@@ -15,6 +15,7 @@ internal static class Launcher
             runtime = Path.Combine(Path.GetTempPath(), "ChromeSweep-" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(runtime);
             Extract(runtime, "ChromeCacheCleaner.ps1");
+            Extract(runtime, "NvidiaCache.ps1");
             Extract(runtime, "ChromeSweep.ico");
             string gui = Extract(runtime, "ChromeCacheCleaner.GUI.ps1");
 
@@ -57,6 +58,7 @@ internal static class Launcher
                 {
                     File.Delete(Path.Combine(runtime, "ChromeCacheCleaner.GUI.ps1"));
                     File.Delete(Path.Combine(runtime, "ChromeCacheCleaner.ps1"));
+                    File.Delete(Path.Combine(runtime, "NvidiaCache.ps1"));
                     File.Delete(Path.Combine(runtime, "ChromeSweep.ico"));
                     Directory.Delete(runtime);
                 }
