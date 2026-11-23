@@ -1,4 +1,4 @@
-<img src="assets/KSweep.png" width="96" alt="Logo KSweep">
+<img src="assets/KSweep-logo-v1.2.1.png" width="96" alt="Logo KSweep">
 
 # KSweep
 
